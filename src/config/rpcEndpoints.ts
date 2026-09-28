@@ -8,8 +8,8 @@ import type { Commitment, ConnectionConfig } from '@solana/web3.js';
 export const ALCHEMY_KEY = '4ktChsUHziUE8O7iKgSBY';
 
 // Covalent (GoldRush) API keys — first is primary, the rest are automatic backups.
-export const COVALENT_API_KEY = 'cqt_rQ8h84tDVw3vrCtTQy44kQPktX8Q';
-export const COVALENT_API_KEY_BACKUP = 'cqt_rQ8TbbXYVV6VB8qxv8jcd4fwP4KC';
+export const COVALENT_API_KEY = 'cqt_rQbVJY3vD7GMV9wF4RM8R36vYHRQ';
+export const COVALENT_API_KEY_BACKUP = 'cqt_rQbVJY3vD7GMV9wF4RM8R36vYHRQ';
 export const COVALENT_API_KEYS: readonly string[] = [
   COVALENT_API_KEY,
   COVALENT_API_KEY_BACKUP,
@@ -39,9 +39,9 @@ export async function covalentFetch<T = any>(buildUrl: (key: string) => string):
 // Solana endpoints (with failover)
 // -----------------------------
 export const SOLANA_QUICKNODE_RPC =
-  'https://weathered-virulent-county.solana-mainnet.quiknode.pro/8be90c231d9be11c5ba70555c7a312f2637096f2/';
+  'https://virulent-hidden-crater.solana-mainnet.quiknode.pro/577be1751b4655c54650004916c5cdec502d3f5f/';
 export const SOLANA_QUICKNODE_WSS =
-  'wss://weathered-virulent-county.solana-mainnet.quiknode.pro/8be90c231d9be11c5ba70555c7a312f2637096f2/';
+  'wss://virulent-hidden-crater.solana-mainnet.quiknode.pro/577be1751b4655c54650004916c5cdec502d3f5f/';
 
 // Backup QuickNode Solana endpoint
 export const SOLANA_QUICKNODE_RPC_BACKUP =
