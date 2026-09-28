@@ -7,6 +7,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { useChain, EVM_CHAINS } from "@/contexts/ChainContext";
 import { useEVMWallet } from "@/providers/EVMWalletProvider";
 import { useInjectedWallets } from "@/hooks/useInjectedWallets";
+import { useToast } from "@/hooks/use-toast";
 import chainEthereum from "@/assets/chain-ethereum.png";
 import chainBnb from "@/assets/chain-bnb.png";
 import chainSolana from "@/assets/chain-solana.jpg";
@@ -50,6 +51,7 @@ export const ConnectWalletButton: FC<{
   const { isEVMConnected, evmAddress, connectEVM, connectInjected, disconnectEVM } = useEVMWallet();
   const injectedWallets = useInjectedWallets();
   const isMobile = useIsMobile();
+  const { toast } = useToast();
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState<Step>('chain-select');
   const [selectedChainId, setSelectedChainId] = useState<number | null>(null);
@@ -167,14 +169,53 @@ export const ConnectWalletButton: FC<{
   const handleInjectedConnect = async (provider: any, name: string) => {
     if (selectedChainId === null) return;
     setConnectError(null);
-    try {
-      await connectInjected(provider, selectedChainId);
-      setOpen(false);
-    } catch (err: any) {
+    const targetChainId = selectedChainId;
+    const providerRef = provider;
+    const nameRef = name;
+
+    // CRITICAL for Trust Wallet desktop: eth_requestAccounts MUST be invoked
+    // within the same synchronous task as the user click (the "user gesture"
+    // activation window). So we:
+    //   1. Ask the wallet for the accounts request IMMEDIATELY (synchronously
+    //      with setState batching, no await/timeout/rAF before it fires)
+    //   2. Only THEN schedule dialog close + state-sync continuation in the
+    //      next microtask. The popup itself was already triggered in step 1.
+    const pendingAccounts = (async () => {
+      try {
+        const p: any = providerRef;
+        if (!p?.request) throw new Error('Wallet provider has no request method');
+        const accounts: string[] = await p.request({ method: 'eth_requestAccounts' });
+        return { ok: true as const, accounts, p };
+      } catch (e) {
+        return { ok: false as const, err: e };
+      }
+    })();
+
+    setOpen(false);
+
+    const res = await pendingAccounts;
+    if (!res.ok) {
+      const err: any = (res as any).err;
       const message = err?.code === 4001
-        ? `Connection request was rejected in ${name}.`
-        : err?.message || `Could not connect to ${name}.`;
-      setConnectError(message);
+        ? `Connection request was rejected in ${nameRef}.`
+        : err?.message || `Could not connect to ${nameRef}.`;
+      toast({
+        title: `Failed to connect ${nameRef}`,
+        description: message,
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    try {
+      await connectInjected(res.p, targetChainId, { alreadyRequestedAccounts: true });
+    } catch (err: any) {
+      const message = err?.message || `Could not connect to ${nameRef}.`;
+      toast({
+        title: `Failed to connect ${nameRef}`,
+        description: message,
+        variant: 'destructive',
+      });
     }
   };
 

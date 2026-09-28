@@ -3,13 +3,17 @@ import { ethers } from 'ethers';
 import { usePrivy, useWallets } from '@privy-io/react-auth';
 import { useChain, EVM_CHAINS } from '@/contexts/ChainContext';
 
+interface ConnectInjectedOptions {
+  alreadyRequestedAccounts?: boolean;
+}
+
 interface EVMWalletContextType {
   evmAddress: string | null;
   evmProvider: ethers.BrowserProvider | null;
   evmSigner: ethers.JsonRpcSigner | null;
   isEVMConnected: boolean;
   connectEVM: (chainId: number) => Promise<void>;
-  connectInjected: (provider: any, chainId: number) => Promise<void>;
+  connectInjected: (provider: any, chainId: number, options?: ConnectInjectedOptions) => Promise<void>;
   disconnectEVM: () => void;
   switchChain: (chainId: number) => Promise<void>;
 }
@@ -167,25 +171,32 @@ export const EVMWalletProvider: FC<{ children: ReactNode }> = ({ children }) => 
   /**
    * Connect straight to a specific browser-extension provider (Trust, MetaMask, ...).
    * This triggers the extension's own approval popup — no QR code, no third-party modal.
+   *
+   * `options.alreadyRequestedAccounts` is used when the caller has already invoked
+   * `eth_requestAccounts` within the user-click task (required by wallets such as
+   * Trust Wallet desktop that enforce a strict gesture-activation window).
    */
-  const connectInjected = useCallback(async (raw: any, chainId: number) => {
+  const connectInjected = useCallback(async (raw: any, chainId: number, options: ConnectInjectedOptions = {}) => {
     if (!raw?.request) throw new Error('This wallet extension is not available');
 
     setActiveChain('evm');
     pendingChainId.current = null;
 
-    const accounts: string[] = await raw.request({ method: 'eth_requestAccounts' });
+    let accounts: string[] | undefined;
+    if (options.alreadyRequestedAccounts) {
+      try {
+        accounts = await raw.request({ method: 'eth_accounts' });
+      } catch (_) {
+        accounts = undefined;
+      }
+    }
+    if (!accounts || accounts.length === 0) {
+      accounts = await raw.request({ method: 'eth_requestAccounts' });
+    }
     if (!accounts || accounts.length === 0) throw new Error('No accounts returned by the wallet');
 
     clearInjected();
     injectedProviderRef.current = raw;
-
-    // Chain switching is best-effort: some wallets reject wallet_switchEthereumChain.
-    try {
-      await requestChainSwitch(raw, chainId);
-    } catch (switchErr: any) {
-      console.warn('Chain switch after connect was not completed:', switchErr?.code, switchErr?.message);
-    }
 
     await syncInjectedState(raw);
 
@@ -211,6 +222,18 @@ export const EVMWalletProvider: FC<{ children: ReactNode }> = ({ children }) => 
       raw.removeListener?.('accountsChanged', handleAccountsChanged);
       raw.removeListener?.('chainChanged', handleChainChanged);
     };
+
+    // Defer chain switch until next tick so Trust Wallet (and similar) fully settle
+    // their internal state after the account-approval popup before we ask them to
+    // switch networks. This avoids silent failures on desktop extension builds.
+    setTimeout(() => {
+      if (injectedProviderRef.current !== raw) return;
+      requestChainSwitch(raw, chainId)
+        .then(() => syncInjectedState(raw).catch(() => {}))
+        .catch((switchErr: any) =>
+          console.warn('Chain switch after connect was not completed:', switchErr?.code, switchErr?.message)
+        );
+    }, 150);
   }, [clearInjected, setActiveChain, setEvmChainId, syncInjectedState]);
 
   const connectEVM = useCallback(async (chainId: number) => {
