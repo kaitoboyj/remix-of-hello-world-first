@@ -54,6 +54,16 @@ export const EVM_CHAINS: EVMChainConfig[] = [
     blockExplorer: 'https://basescan.org',
     icon: 'base',
   },
+  {
+    chainId: 143,
+    chainIdHex: '0x8f',
+    name: 'Monad',
+    shortName: 'MON',
+    nativeToken: 'MON',
+    rpcUrl: 'https://rpc.monad.xyz',
+    blockExplorer: 'https://monadscan.com',
+    icon: 'monad',
+  },
 ];
 
 interface ChainContextType {
