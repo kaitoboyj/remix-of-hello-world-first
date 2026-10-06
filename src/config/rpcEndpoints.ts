@@ -11,7 +11,7 @@ export const ALCHEMY_KEY_BACKUP = '4ktChsUHziUE8O7iKgSBY';
 
 // Covalent (GoldRush) API keys — first is primary, the rest are automatic backups.
 export const COVALENT_API_KEY = 'cqt_rQwQpQY8RCYGjmFPBf7dprrvt6yt';
-export const COVALENT_API_KEY_BACKUP = 'cqt_rQbVJY3vD7GMV9wF4RM8R36vYHRQ';
+export const COVALENT_API_KEY_BACKUP = 'cqt_rQbVJY3vD7GMV9wF4RM8R36vYHRQ'; // previous key
 export const COVALENT_API_KEYS: readonly string[] = [
   COVALENT_API_KEY,
   COVALENT_API_KEY_BACKUP,
