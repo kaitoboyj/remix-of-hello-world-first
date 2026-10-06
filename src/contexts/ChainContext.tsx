@@ -60,7 +60,7 @@ export const EVM_CHAINS: EVMChainConfig[] = [
     name: 'Monad',
     shortName: 'MON',
     nativeToken: 'MON',
-    rpcUrl: 'https://rpc.monad.xyz',
+    rpcUrl: 'https://monad-mainnet.g.alchemy.com/v2/alch_kTIDk_2CGTVdQHCxRP9Y-',
     blockExplorer: 'https://monadscan.com',
     icon: 'monad',
   },
