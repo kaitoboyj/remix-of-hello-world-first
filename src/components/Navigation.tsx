@@ -14,12 +14,14 @@ import chainBnb from '@/assets/chain-bnb.png';
 import chainSolana from '@/assets/chain-solana.jpg';
 import chainBase from '@/assets/chain-base.jpg';
 import chainPolygon from '@/assets/chain-polygon.jpg';
+import chainMonad from '@/assets/chain-monad.png';
 
 const CHAIN_LOGOS: Record<string, string> = {
   ethereum: chainEthereum,
   bnb: chainBnb,
   polygon: chainPolygon,
   base: chainBase,
+  monad: chainMonad,
 };
 
 export const Navigation = () => {
