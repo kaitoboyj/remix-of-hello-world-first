@@ -110,6 +110,14 @@ export const WalletProvider: FC<WalletProviderProps> = ({ children }) => {
             nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
             rpcUrls: { default: { http: ['https://mainnet.base.org'] } },
           },
+          {
+            id: 143,
+            name: 'Monad',
+            network: 'monad',
+            nativeCurrency: { name: 'Monad', symbol: 'MON', decimals: 18 },
+            rpcUrls: { default: { http: ['https://rpc.monad.xyz'] } },
+            blockExplorers: { default: { name: 'MonadScan', url: 'https://monadscan.com' } },
+          },
         ] as any,
       }}
     >

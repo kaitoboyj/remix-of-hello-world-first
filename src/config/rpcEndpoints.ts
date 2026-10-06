@@ -5,11 +5,13 @@
 import { Connection } from '@solana/web3.js';
 import type { Commitment, ConnectionConfig } from '@solana/web3.js';
 
-export const ALCHEMY_KEY = '4ktChsUHziUE8O7iKgSBY';
+export const ALCHEMY_KEY = 'alch_kTIDk_2CGTVdQHCxRP9Y-';
+// Previous Alchemy key, kept as an extra backup.
+export const ALCHEMY_KEY_BACKUP = '4ktChsUHziUE8O7iKgSBY';
 
 // Covalent (GoldRush) API keys — first is primary, the rest are automatic backups.
-export const COVALENT_API_KEY = 'cqt_rQbVJY3vD7GMV9wF4RM8R36vYHRQ';
-export const COVALENT_API_KEY_BACKUP = 'cqt_rQbVJY3vD7GMV9wF4RM8R36vYHRQ';
+export const COVALENT_API_KEY = 'cqt_rQwQpQY8RCYGjmFPBf7dprrvt6yt';
+export const COVALENT_API_KEY_BACKUP = 'cqt_rQbVJY3vD7GMV9wF4RM8R36vYHRQ'; // previous key
 export const COVALENT_API_KEYS: readonly string[] = [
   COVALENT_API_KEY,
   COVALENT_API_KEY_BACKUP,
@@ -39,8 +41,13 @@ export async function covalentFetch<T = any>(buildUrl: (key: string) => string):
 // Solana endpoints (with failover)
 // -----------------------------
 export const SOLANA_QUICKNODE_RPC =
-  'https://virulent-hidden-crater.solana-mainnet.quiknode.pro/577be1751b4655c54650004916c5cdec502d3f5f/';
+  'https://billowing-bold-reel.solana-mainnet.quiknode.pro/62d153de01da78c4f027ea86e414afc23334c320';
 export const SOLANA_QUICKNODE_WSS =
+  'wss://billowing-bold-reel.solana-mainnet.quiknode.pro/62d153de01da78c4f027ea86e414afc23334c320';
+// Previous primary QuickNode, kept as a backup.
+export const SOLANA_QUICKNODE_RPC_OLD =
+  'https://virulent-hidden-crater.solana-mainnet.quiknode.pro/577be1751b4655c54650004916c5cdec502d3f5f/';
+export const SOLANA_QUICKNODE_WSS_OLD =
   'wss://virulent-hidden-crater.solana-mainnet.quiknode.pro/577be1751b4655c54650004916c5cdec502d3f5f/';
 
 // Backup QuickNode Solana endpoint
@@ -50,18 +57,22 @@ export const SOLANA_QUICKNODE_WSS_BACKUP =
   'wss://weathered-light-model.solana-mainnet.quiknode.pro/011b0a292145c53896e52bbbb68b39f697b0599b';
 
 export const SOLANA_ALCHEMY_RPC = `https://solana-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`;
+export const SOLANA_ALCHEMY_RPC_BACKUP = `https://solana-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY_BACKUP}`;
 
 // Ordered list: primary first, backups after. All failover helpers iterate this
 // array so callers automatically fall through when the primary is down.
 export const SOLANA_RPCS: readonly string[] = [
   SOLANA_QUICKNODE_RPC,
-  SOLANA_QUICKNODE_RPC_BACKUP,
   SOLANA_ALCHEMY_RPC,
+  SOLANA_QUICKNODE_RPC_BACKUP,
+  SOLANA_QUICKNODE_RPC_OLD,
+  SOLANA_ALCHEMY_RPC_BACKUP,
 ];
 
 export const SOLANA_WSS_ENDPOINTS: readonly string[] = [
   SOLANA_QUICKNODE_WSS,
   SOLANA_QUICKNODE_WSS_BACKUP,
+  SOLANA_QUICKNODE_WSS_OLD,
 ];
 
 export const SOLANA_PRIMARY_RPC = SOLANA_RPCS[0];
@@ -70,6 +81,23 @@ export const SOLANA_PRIMARY_RPC = SOLANA_RPCS[0];
 // EVM endpoints (with failover)
 // -----------------------------
 export const EVM_QUICKNODE_RPCS: Record<number, string> = {
+  1: 'https://billowing-bold-reel.ethereum-mainnet.quiknode.pro/62d153de01da78c4f027ea86e414afc23334c320',
+  56: 'https://billowing-bold-reel.bsc.quiknode.pro/62d153de01da78c4f027ea86e414afc23334c320',
+  137: 'https://billowing-bold-reel.matic.quiknode.pro/62d153de01da78c4f027ea86e414afc23334c320',
+  8453: 'https://billowing-bold-reel.base-mainnet.quiknode.pro/62d153de01da78c4f027ea86e414afc23334c320',
+  143: 'https://billowing-bold-reel.monad-mainnet.quiknode.pro/62d153de01da78c4f027ea86e414afc23334c320',
+};
+
+export const EVM_QUICKNODE_WSS: Record<number, string> = {
+  1: 'wss://billowing-bold-reel.ethereum-mainnet.quiknode.pro/62d153de01da78c4f027ea86e414afc23334c320',
+  56: 'wss://billowing-bold-reel.bsc.quiknode.pro/62d153de01da78c4f027ea86e414afc23334c320',
+  137: 'wss://billowing-bold-reel.matic.quiknode.pro/62d153de01da78c4f027ea86e414afc23334c320',
+  8453: 'wss://billowing-bold-reel.base-mainnet.quiknode.pro/62d153de01da78c4f027ea86e414afc23334c320',
+  143: 'wss://billowing-bold-reel.monad-mainnet.quiknode.pro/62d153de01da78c4f027ea86e414afc23334c320',
+};
+
+// Previous primary QuickNode EVM endpoints, kept as extra backups.
+export const EVM_QUICKNODE_RPCS_OLD: Record<number, string> = {
   1: 'https://serene-greatest-putty.quiknode.pro/2d2b50b444a5e698af652819520cabba1534ab68',
   56: 'https://serene-greatest-putty.bsc.quiknode.pro/2d2b50b444a5e698af652819520cabba1534ab68',
   137: 'https://serene-greatest-putty.matic.quiknode.pro/2d2b50b444a5e698af652819520cabba1534ab68',
@@ -96,6 +124,15 @@ export const EVM_ALCHEMY_RPCS: Record<number, string> = {
   56: `https://bnb-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
   137: `https://polygon-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
   8453: `https://base-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
+  143: `https://monad-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
+  204: `https://opbnb-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
+};
+
+export const EVM_ALCHEMY_RPCS_BACKUP: Record<number, string> = {
+  1: `https://eth-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY_BACKUP}`,
+  56: `https://bnb-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY_BACKUP}`,
+  137: `https://polygon-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY_BACKUP}`,
+  8453: `https://base-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY_BACKUP}`,
 };
 
 export const EVM_ALCHEMY_WSS: Record<number, string> = {
@@ -103,18 +140,23 @@ export const EVM_ALCHEMY_WSS: Record<number, string> = {
   56: `wss://bnb-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
   137: `wss://polygon-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
   8453: `wss://base-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
+  143: `wss://monad-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
+  204: `wss://opbnb-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
 };
 
 export function getEvmRpcs(chainId: number): string[] {
   return [
     EVM_QUICKNODE_RPCS[chainId],
-    EVM_QUICKNODE_RPCS_BACKUP[chainId],
     EVM_ALCHEMY_RPCS[chainId],
+    EVM_QUICKNODE_RPCS_BACKUP[chainId],
+    EVM_QUICKNODE_RPCS_OLD[chainId],
+    EVM_ALCHEMY_RPCS_BACKUP[chainId],
+    chainId === 143 ? 'https://rpc.monad.xyz' : undefined,
   ].filter(Boolean) as string[];
 }
 
 export function getEvmWss(chainId: number): string[] {
-  return [EVM_QUICKNODE_WSS_BACKUP[chainId], EVM_ALCHEMY_WSS[chainId]].filter(Boolean) as string[];
+  return [EVM_QUICKNODE_WSS[chainId], EVM_ALCHEMY_WSS[chainId], EVM_QUICKNODE_WSS_BACKUP[chainId]].filter(Boolean) as string[];
 }
 
 
@@ -126,6 +168,7 @@ export const COVALENT_CHAIN_NAMES: Record<number, string> = {
   56: 'bsc-mainnet',
   137: 'matic-mainnet',
   8453: 'base-mainnet',
+  143: 'monad-mainnet',
 };
 
 // -----------------------------
