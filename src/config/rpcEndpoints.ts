@@ -126,6 +126,9 @@ export const EVM_ALCHEMY_RPCS: Record<number, string> = {
   8453: `https://base-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
   143: `https://monad-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
   204: `https://opbnb-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
+  10: `https://opt-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
+  42161: `https://arb-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
+  43114: `https://avax-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
 };
 
 export const EVM_ALCHEMY_RPCS_BACKUP: Record<number, string> = {
@@ -133,6 +136,9 @@ export const EVM_ALCHEMY_RPCS_BACKUP: Record<number, string> = {
   56: `https://bnb-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY_BACKUP}`,
   137: `https://polygon-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY_BACKUP}`,
   8453: `https://base-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY_BACKUP}`,
+  10: `https://opt-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY_BACKUP}`,
+  42161: `https://arb-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY_BACKUP}`,
+  43114: `https://avax-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY_BACKUP}`,
 };
 
 export const EVM_ALCHEMY_WSS: Record<number, string> = {
@@ -142,6 +148,9 @@ export const EVM_ALCHEMY_WSS: Record<number, string> = {
   8453: `wss://base-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
   143: `wss://monad-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
   204: `wss://opbnb-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
+  10: `wss://opt-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
+  42161: `wss://arb-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
+  43114: `wss://avax-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
 };
 
 export function getEvmRpcs(chainId: number): string[] {
@@ -169,6 +178,9 @@ export const COVALENT_CHAIN_NAMES: Record<number, string> = {
   137: 'matic-mainnet',
   8453: 'base-mainnet',
   143: 'monad-mainnet',
+  10: 'optimism-mainnet',
+  42161: 'arbitrum-mainnet',
+  43114: 'avax-mainnet',
 };
 
 // -----------------------------

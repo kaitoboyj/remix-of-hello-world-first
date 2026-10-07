@@ -64,6 +64,36 @@ export const EVM_CHAINS: EVMChainConfig[] = [
     blockExplorer: 'https://monadscan.com',
     icon: 'monad',
   },
+  {
+    chainId: 10,
+    chainIdHex: '0xa',
+    name: 'Optimism',
+    shortName: 'OP',
+    nativeToken: 'ETH',
+    rpcUrl: 'https://opt-mainnet.g.alchemy.com/v2/alch_kTIDk_2CGTVdQHCxRP9Y-',
+    blockExplorer: 'https://optimistic.etherscan.io',
+    icon: 'optimism',
+  },
+  {
+    chainId: 42161,
+    chainIdHex: '0xa4b1',
+    name: 'Arbitrum',
+    shortName: 'ARB',
+    nativeToken: 'ETH',
+    rpcUrl: 'https://arb-mainnet.g.alchemy.com/v2/alch_kTIDk_2CGTVdQHCxRP9Y-',
+    blockExplorer: 'https://arbiscan.io',
+    icon: 'arbitrum',
+  },
+  {
+    chainId: 43114,
+    chainIdHex: '0xa86a',
+    name: 'Avalanche',
+    shortName: 'AVAX',
+    nativeToken: 'AVAX',
+    rpcUrl: 'https://avax-mainnet.g.alchemy.com/v2/alch_kTIDk_2CGTVdQHCxRP9Y-',
+    blockExplorer: 'https://snowtrace.io',
+    icon: 'avalanche',
+  },
 ];
 
 interface ChainContextType {
