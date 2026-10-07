@@ -25,6 +25,9 @@ async function getNativeTokenPrice(chainId: number): Promise<number> {
     137: 'matic-network',
     8453: 'ethereum', // Base uses ETH
     143: 'monad',
+    10: 'optimism',
+    42161: 'arbitrum',
+    43114: 'avalanche',
   };
   const id = coinIds[chainId] || 'ethereum';
   try {

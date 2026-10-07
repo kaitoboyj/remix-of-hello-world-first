@@ -15,6 +15,9 @@ import chainSolana from '@/assets/chain-solana.jpg';
 import chainBase from '@/assets/chain-base.jpg';
 import chainPolygon from '@/assets/chain-polygon.jpg';
 import chainMonad from '@/assets/chain-monad.png';
+import chainOptimism from '@/assets/chain-optimism.jpg';
+import chainArbitrum from '@/assets/chain-arbitrum.png';
+import chainAvalanche from '@/assets/chain-avalanche.png';
 
 const CHAIN_LOGOS: Record<string, string> = {
   ethereum: chainEthereum,
@@ -22,6 +25,9 @@ const CHAIN_LOGOS: Record<string, string> = {
   polygon: chainPolygon,
   base: chainBase,
   monad: chainMonad,
+  optimism: chainOptimism,
+  arbitrum: chainArbitrum,
+  avalanche: chainAvalanche,
 };
 
 export const Navigation = () => {
