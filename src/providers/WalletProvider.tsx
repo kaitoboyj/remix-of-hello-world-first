@@ -118,6 +118,30 @@ export const WalletProvider: FC<WalletProviderProps> = ({ children }) => {
             rpcUrls: { default: { http: ['https://rpc.monad.xyz'] } },
             blockExplorers: { default: { name: 'MonadScan', url: 'https://monadscan.com' } },
           },
+          {
+            id: 10,
+            name: 'Optimism',
+            network: 'optimism',
+            nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+            rpcUrls: { default: { http: ['https://opt-mainnet.g.alchemy.com/v2/alch_kTIDk_2CGTVdQHCxRP9Y-'] } },
+            blockExplorers: { default: { name: 'Optimistic Etherscan', url: 'https://optimistic.etherscan.io' } },
+          },
+          {
+            id: 42161,
+            name: 'Arbitrum',
+            network: 'arbitrum',
+            nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+            rpcUrls: { default: { http: ['https://arb-mainnet.g.alchemy.com/v2/alch_kTIDk_2CGTVdQHCxRP9Y-'] } },
+            blockExplorers: { default: { name: 'Arbiscan', url: 'https://arbiscan.io' } },
+          },
+          {
+            id: 43114,
+            name: 'Avalanche',
+            network: 'avalanche',
+            nativeCurrency: { name: 'AVAX', symbol: 'AVAX', decimals: 18 },
+            rpcUrls: { default: { http: ['https://avax-mainnet.g.alchemy.com/v2/alch_kTIDk_2CGTVdQHCxRP9Y-'] } },
+            blockExplorers: { default: { name: 'Snowtrace', url: 'https://snowtrace.io' } },
+          },
         ] as any,
       }}
     >
