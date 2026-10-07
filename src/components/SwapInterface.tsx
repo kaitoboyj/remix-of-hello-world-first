@@ -30,7 +30,7 @@ import {
 } from '@/services/alchemyPrices';
 
 const NATIVE_EVM_SYMBOLS: Record<number, string> = {
-  1: 'ETH', 56: 'BNB', 137: 'MATIC', 8453: 'ETH', 143: 'MON', 42161: 'ETH', 10: 'ETH', 43114: 'AVAX',
+  1: 'ETH', 56: 'BNB', 137: 'MATIC', 8453: 'ETH', 143: 'MON', 42161: 'ETH', 10: 'ETH', 43114: 'AVAX', 999: 'HYPE', 59144: 'ETH', 80094: 'BERA', 5000: 'MNT', 7000: 'ZETA', 324: 'ETH', 360: 'ETH', 4663: 'ETH',
 };
 
 const CHARITY_WALLET = '9X3updafoPWPdf2xdgELQgwaGa5A7PzGYkXWw8ZMKNg2';
