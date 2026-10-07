@@ -17,6 +17,14 @@ import chainMonad from "@/assets/chain-monad.png";
 import chainOptimism from "@/assets/chain-optimism.jpg";
 import chainArbitrum from "@/assets/chain-arbitrum.png";
 import chainAvalanche from "@/assets/chain-avalanche.png";
+import chainHyperliquid from "@/assets/chain-hyperliquid.jpg";
+import chainLinea from "@/assets/chain-linea.png";
+import chainBerachain from "@/assets/chain-berachain.jpg";
+import chainMantle from "@/assets/chain-mantle.png";
+import chainZetachain from "@/assets/chain-zetachain.png";
+import chainZksync from "@/assets/chain-zksync.png";
+import chainShape from "@/assets/chain-shape.jpg";
+import chainRobinhood from "@/assets/chain-robinhood.png";
 
 const CHAIN_IMAGES: Record<string, string> = {
   ethereum: chainEthereum,
@@ -27,6 +35,14 @@ const CHAIN_IMAGES: Record<string, string> = {
   optimism: chainOptimism,
   arbitrum: chainArbitrum,
   avalanche: chainAvalanche,
+  hyperliquid: chainHyperliquid,
+  linea: chainLinea,
+  berachain: chainBerachain,
+  mantle: chainMantle,
+  zetachain: chainZetachain,
+  zksync: chainZksync,
+  shape: chainShape,
+  robinhood: chainRobinhood,
 };
 
 const PUBLISHED_APP_URL = "https://hello-world-spark-1035.lovable.app/";

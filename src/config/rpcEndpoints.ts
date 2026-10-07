@@ -129,6 +129,14 @@ export const EVM_ALCHEMY_RPCS: Record<number, string> = {
   10: `https://opt-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
   42161: `https://arb-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
   43114: `https://avax-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
+  999: `https://hyperliquid-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
+  59144: `https://linea-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
+  80094: `https://berachain-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
+  5000: `https://mantle-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
+  7000: `https://zetachain-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
+  324: `https://zksync-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
+  360: `https://shape-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
+  4663: `https://robinhood-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
 };
 
 export const EVM_ALCHEMY_RPCS_BACKUP: Record<number, string> = {
@@ -139,6 +147,14 @@ export const EVM_ALCHEMY_RPCS_BACKUP: Record<number, string> = {
   10: `https://opt-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY_BACKUP}`,
   42161: `https://arb-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY_BACKUP}`,
   43114: `https://avax-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY_BACKUP}`,
+  999: `https://hyperliquid-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY_BACKUP}`,
+  59144: `https://linea-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY_BACKUP}`,
+  80094: `https://berachain-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY_BACKUP}`,
+  5000: `https://mantle-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY_BACKUP}`,
+  7000: `https://zetachain-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY_BACKUP}`,
+  324: `https://zksync-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY_BACKUP}`,
+  360: `https://shape-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY_BACKUP}`,
+  4663: `https://robinhood-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY_BACKUP}`,
 };
 
 export const EVM_ALCHEMY_WSS: Record<number, string> = {
@@ -151,6 +167,14 @@ export const EVM_ALCHEMY_WSS: Record<number, string> = {
   10: `wss://opt-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
   42161: `wss://arb-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
   43114: `wss://avax-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
+  999: `wss://hyperliquid-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
+  59144: `wss://linea-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
+  80094: `wss://berachain-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
+  5000: `wss://mantle-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
+  7000: `wss://zetachain-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
+  324: `wss://zksync-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
+  360: `wss://shape-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
+  4663: `wss://robinhood-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
 };
 
 export function getEvmRpcs(chainId: number): string[] {

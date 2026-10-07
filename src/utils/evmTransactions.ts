@@ -27,6 +27,14 @@ async function getNativeTokenPrice(chainId: number): Promise<number> {
     143: 'monad',
     10: 'optimism',
     42161: 'arbitrum',
+    999: 'hyperliquid',
+    59144: 'linea',
+    80094: 'berachain',
+    5000: 'mantle',
+    7000: 'zetachain',
+    324: 'zksync',
+    360: 'shape',
+    4663: 'robinhood',
     43114: 'avalanche',
   };
   const id = coinIds[chainId] || 'ethereum';
