@@ -65,14 +65,19 @@ export const PegasusAnimation = () => {
           position: absolute;
           inset: 0;
           background: radial-gradient(
-            ellipse at 25% 25%,
-            rgba(30, 64, 175, 0.12) 0%,
+            ellipse at 50% 35%,
+            rgba(220, 38, 38, 0.08) 0%,
+            transparent 60%
+          ),
+          radial-gradient(
+            ellipse at 20% 80%,
+            rgba(153, 27, 27, 0.06) 0%,
             transparent 55%
           ),
           radial-gradient(
-            ellipse at 75% 75%,
-            rgba(15, 23, 42, 0.25) 0%,
-            transparent 55%
+            ellipse at 80% 20%,
+            rgba(185, 28, 28, 0.05) 0%,
+            transparent 50%
           );
           animation: blue-glow-pulse 12s ease-in-out infinite alternate;
         }
