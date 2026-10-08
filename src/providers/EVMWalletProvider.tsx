@@ -79,7 +79,7 @@ export const EVMWalletProvider: FC<{ children: ReactNode }> = ({ children }) => 
     signer: latestSignerRef.current,
     provider: latestProviderRef.current,
     address: latestAddressRef.current,
-  })), []);
+  }), []);
 
   useEffect(() => { latestSignerRef.current = evmSigner; }, [evmSigner]);
   useEffect(() => { latestProviderRef.current = evmProvider; }, [evmProvider]);
