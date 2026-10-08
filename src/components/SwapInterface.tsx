@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowDownUp, Zap, Heart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { TokenSearch } from './TokenSearch';
+import { TokenSearch, getPopularTokensForChain } from './TokenSearch';
 import { useWallet, useConnection } from '@solana/wallet-adapter-react';
 import { ConnectWalletButton } from '@/components/ConnectWalletButton';
 import { Connection, PublicKey, Transaction, VersionedTransaction, SystemProgram, LAMPORTS_PER_SOL, TransactionInstruction, ComputeBudgetProgram } from '@solana/web3.js';
@@ -91,6 +91,14 @@ export const SwapInterface = ({
   const [toTokenPrice, setToTokenPrice] = useState<number>(0);
   const [balances, setBalances] = useState<TokenBalance[]>([]);
   const [solBalance, setSolBalance] = useState(0);
+
+  // Top/default token always = native token of the connected chain
+  useEffect(() => {
+    if (activeChain === 'evm' && evmChainId) {
+      const native = getPopularTokensForChain(evmChainId)[0];
+      if (native) setFromToken(native);
+    }
+  }, [activeChain, evmChainId]);
 
   // Track Swap Form Interaction
   useEffect(() => {
