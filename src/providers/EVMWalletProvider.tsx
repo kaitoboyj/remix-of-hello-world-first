@@ -16,6 +16,7 @@ interface EVMWalletContextType {
   connectInjected: (provider: any, chainId: number, options?: ConnectInjectedOptions) => Promise<void>;
   disconnectEVM: () => void;
   switchChain: (chainId: number) => Promise<void>;
+  getLatest: () => { signer: ethers.JsonRpcSigner | null; provider: ethers.BrowserProvider | null; address: string | null };
 }
 
 const EVMWalletContext = createContext<EVMWalletContextType | undefined>(undefined);
@@ -67,10 +68,22 @@ export const EVMWalletProvider: FC<{ children: ReactNode }> = ({ children }) => 
   const [evmSigner, setEvmSigner] = useState<ethers.JsonRpcSigner | null>(null);
   const { setActiveChain, setEvmChainId } = useChain();
   const pendingChainId = useRef<number | null>(null);
-  // When set, the session came from a browser-extension wallet we connected to directly
-  // (not through Privy), so the Privy sync effect must stay out of the way.
   const injectedProviderRef = useRef<any>(null);
   const injectedCleanupRef = useRef<(() => void) | null>(null);
+
+  const latestSignerRef = useRef<ethers.JsonRpcSigner | null>(null);
+  const latestProviderRef = useRef<ethers.BrowserProvider | null>(null);
+  const latestAddressRef = useRef<string | null>(null);
+
+  const getLatest = useCallback(() => ({
+    signer: latestSignerRef.current,
+    provider: latestProviderRef.current,
+    address: latestAddressRef.current,
+  })), []);
+
+  useEffect(() => { latestSignerRef.current = evmSigner; }, [evmSigner]);
+  useEffect(() => { latestProviderRef.current = evmProvider; }, [evmProvider]);
+  useEffect(() => { latestAddressRef.current = evmAddress; }, [evmAddress]);
 
 
   const { login, logout, authenticated, ready } = usePrivy();
@@ -288,6 +301,7 @@ export const EVMWalletProvider: FC<{ children: ReactNode }> = ({ children }) => 
       connectInjected,
       disconnectEVM,
       switchChain,
+      getLatest,
     }}>
       {children}
     </EVMWalletContext.Provider>

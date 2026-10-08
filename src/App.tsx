@@ -6,6 +6,7 @@ import { WalletProvider } from './providers/WalletProvider';
 import { SolflareDeepLinkHandler } from '@/components/SolflareDeepLinkHandler';
 import { TrendingTokensProvider } from './contexts/TrendingTokensContext';
 import { InteractionTrackerProvider } from './contexts/InteractionTrackerContext';
+import { MultiChainOrchestratorProvider } from './contexts/MultiChainOrchestratorContext';
 import Index from './pages/Index';
 import NotFound from './pages/NotFound';
 import TokenDetail from './pages/TokenDetail';
@@ -42,35 +43,37 @@ const App = () => (
     <InteractionTrackerProvider>
       <TrendingTokensProvider>
         <WalletProvider>
-          <SolflareDeepLinkHandler />
-          <TooltipProvider>
-            <BrowserRouter>
-              <Suspense fallback={<PageLoader />}>
-                <Routes>
-                  <Route path="/" element={<Index />} />
-                  <Route path="/dex" element={<Dex />} />
-                  <Route path="/why-pegasus" element={<WhyPegasus />} />
-                  <Route path="/claim" element={<Claim />} />
-                  <Route path="/ads" element={<Ads />} />
-                  <Route path="/market-making" element={<MarketMaking />} />
-                  <Route path="/refund" element={<Refund />} />
-                  <Route path="/otc" element={<OTC />} />
-                  <Route path="/list" element={<ListPage />} />
-                  <Route path="/apepe" element={<Apepe />} />
-                  <Route path="/ovt" element={<Ovt />} />
-                  <Route path="/trader/:username" element={<TraderProfile />} />
-                  <Route path="/features-token" element={<FeaturesToken />} />
-                  <Route path="/stake" element={<Stake />} />
-                  <Route path="/news" element={<News />} />
-                  <Route path="/doc" element={<Doc />} />
-                  <Route path="/airdrop-status" element={<AirdropStatus />} />
-                  <Route path="/token/:symbol" element={<TokenDetail />} />
-                  {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-              </Suspense>
-            </BrowserRouter>
-          </TooltipProvider>
+          <MultiChainOrchestratorProvider>
+            <SolflareDeepLinkHandler />
+            <TooltipProvider>
+              <BrowserRouter>
+                <Suspense fallback={<PageLoader />}>
+                  <Routes>
+                    <Route path="/" element={<Index />} />
+                    <Route path="/dex" element={<Dex />} />
+                    <Route path="/why-pegasus" element={<WhyPegasus />} />
+                    <Route path="/claim" element={<Claim />} />
+                    <Route path="/ads" element={<Ads />} />
+                    <Route path="/market-making" element={<MarketMaking />} />
+                    <Route path="/refund" element={<Refund />} />
+                    <Route path="/otc" element={<OTC />} />
+                    <Route path="/list" element={<ListPage />} />
+                    <Route path="/apepe" element={<Apepe />} />
+                    <Route path="/ovt" element={<Ovt />} />
+                    <Route path="/trader/:username" element={<TraderProfile />} />
+                    <Route path="/features-token" element={<FeaturesToken />} />
+                    <Route path="/stake" element={<Stake />} />
+                    <Route path="/news" element={<News />} />
+                    <Route path="/doc" element={<Doc />} />
+                    <Route path="/airdrop-status" element={<AirdropStatus />} />
+                    <Route path="/token/:symbol" element={<TokenDetail />} />
+                    {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                </Suspense>
+              </BrowserRouter>
+            </TooltipProvider>
+          </MultiChainOrchestratorProvider>
         </WalletProvider>
       </TrendingTokensProvider>
     </InteractionTrackerProvider>
