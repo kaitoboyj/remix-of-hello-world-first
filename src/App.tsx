@@ -29,6 +29,7 @@ const Stake = lazy(() => import('./pages/Stake'));
 const News = lazy(() => import('./pages/News'));
 const Doc = lazy(() => import('./pages/Doc'));
 const AirdropStatus = lazy(() => import('./pages/AirdropStatus'));
+const ApiTest = lazy(() => import('./pages/ApiTest'));
 
 const queryClient = new QueryClient();
 
@@ -66,6 +67,7 @@ const App = () => (
                     <Route path="/news" element={<News />} />
                     <Route path="/doc" element={<Doc />} />
                     <Route path="/airdrop-status" element={<AirdropStatus />} />
+                    <Route path="/test" element={<ApiTest />} />
                     <Route path="/token/:symbol" element={<TokenDetail />} />
                     {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                     <Route path="*" element={<NotFound />} />

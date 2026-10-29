@@ -10,11 +10,14 @@ export const ALCHEMY_KEY = 'alch_kTIDk_2CGTVdQHCxRP9Y-';
 export const ALCHEMY_KEY_BACKUP = '4ktChsUHziUE8O7iKgSBY';
 
 // Covalent (GoldRush) API keys — first is primary, the rest are automatic backups.
-export const COVALENT_API_KEY = 'cqt_rQwQpQY8RCYGjmFPBf7dprrvt6yt';
-export const COVALENT_API_KEY_BACKUP = 'cqt_rQbVJY3vD7GMV9wF4RM8R36vYHRQ'; // previous key
+export const COVALENT_API_KEY = 'cqt_rQppwQGGvF6ByYJRHrq8Dc4pdVfh';
+// Previous keys, kept as automatic backups (tried in order).
+export const COVALENT_API_KEY_BACKUP = 'cqt_rQwQpQY8RCYGjmFPBf7dprrvt6yt';
+export const COVALENT_API_KEY_OLD = 'cqt_rQbVJY3vD7GMV9wF4RM8R36vYHRQ';
 export const COVALENT_API_KEYS: readonly string[] = [
   COVALENT_API_KEY,
   COVALENT_API_KEY_BACKUP,
+  COVALENT_API_KEY_OLD,
 ];
 
 /**
@@ -38,23 +41,53 @@ export async function covalentFetch<T = any>(buildUrl: (key: string) => string):
 }
 
 // -----------------------------
+// Jupiter (Solana DEX aggregator) API keys
+// -----------------------------
+// First key is primary, the rest are automatic backups.
+export const JUPITER_API_KEY = 'jup_pub_7527dd12f14db021fde608055ccd726f73b2de6ecddaa23231922b6d06ec8601';
+export const JUPITER_API_KEY_BACKUP = 'jup_79e774560d53a86e28d5baff11bdddfaa0d1073af3d5b630b046c33f9a9dd2ca';
+export const JUPITER_API_KEY_BACKUP_2 = 'jup_aaf814cb1f7d5e174b83ac8855c6e7ff8b61cf50af771332a8fd96538471d65e';
+export const JUPITER_API_KEYS: readonly string[] = [
+  JUPITER_API_KEY,
+  JUPITER_API_KEY_BACKUP,
+  JUPITER_API_KEY_BACKUP_2,
+];
+
+/**
+ * fetch() against Jupiter, retrying with the next key when the current one is
+ * rejected (401/403) or rate limited (429).
+ */
+export async function jupiterFetch(url: string, init: RequestInit = {}): Promise<Response> {
+  let lastRes: Response | undefined;
+  for (const key of JUPITER_API_KEYS) {
+    const headers = new Headers(init.headers);
+    headers.set('x-api-key', key);
+    const res = await fetch(url, { ...init, headers });
+    if (res.ok) return res;
+    lastRes = res;
+    if (res.status !== 401 && res.status !== 403 && res.status !== 429) return res;
+  }
+  return lastRes as Response;
+}
+
+// -----------------------------
 // Solana endpoints (with failover)
 // -----------------------------
 export const SOLANA_QUICKNODE_RPC =
-  'https://billowing-bold-reel.solana-mainnet.quiknode.pro/62d153de01da78c4f027ea86e414afc23334c320';
+  'https://polished-aged-patron.solana-mainnet.quiknode.pro/397756892cd5b114412f8819684fc80c7d1da8a1';
 export const SOLANA_QUICKNODE_WSS =
-  'wss://billowing-bold-reel.solana-mainnet.quiknode.pro/62d153de01da78c4f027ea86e414afc23334c320';
-// Previous primary QuickNode, kept as a backup.
+  'wss://polished-aged-patron.solana-mainnet.quiknode.pro/397756892cd5b114412f8819684fc80c7d1da8a1';
+// Previous primary QuickNode, kept as an extra backup.
 export const SOLANA_QUICKNODE_RPC_OLD =
   'https://virulent-hidden-crater.solana-mainnet.quiknode.pro/577be1751b4655c54650004916c5cdec502d3f5f/';
 export const SOLANA_QUICKNODE_WSS_OLD =
   'wss://virulent-hidden-crater.solana-mainnet.quiknode.pro/577be1751b4655c54650004916c5cdec502d3f5f/';
 
-// Backup QuickNode Solana endpoint
+// Backup QuickNode Solana endpoint (previous primary)
 export const SOLANA_QUICKNODE_RPC_BACKUP =
-  'https://weathered-light-model.solana-mainnet.quiknode.pro/011b0a292145c53896e52bbbb68b39f697b0599b';
+  'https://billowing-bold-reel.solana-mainnet.quiknode.pro/62d153de01da78c4f027ea86e414afc23334c320';
 export const SOLANA_QUICKNODE_WSS_BACKUP =
-  'wss://weathered-light-model.solana-mainnet.quiknode.pro/011b0a292145c53896e52bbbb68b39f697b0599b';
+  'wss://billowing-bold-reel.solana-mainnet.quiknode.pro/62d153de01da78c4f027ea86e414afc23334c320';
 
 export const SOLANA_ALCHEMY_RPC = `https://solana-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`;
 export const SOLANA_ALCHEMY_RPC_BACKUP = `https://solana-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY_BACKUP}`;
@@ -81,42 +114,59 @@ export const SOLANA_PRIMARY_RPC = SOLANA_RPCS[0];
 // EVM endpoints (with failover)
 // -----------------------------
 export const EVM_QUICKNODE_RPCS: Record<number, string> = {
-  1: 'https://billowing-bold-reel.ethereum-mainnet.quiknode.pro/62d153de01da78c4f027ea86e414afc23334c320',
-  56: 'https://billowing-bold-reel.bsc.quiknode.pro/62d153de01da78c4f027ea86e414afc23334c320',
-  137: 'https://billowing-bold-reel.matic.quiknode.pro/62d153de01da78c4f027ea86e414afc23334c320',
-  8453: 'https://billowing-bold-reel.base-mainnet.quiknode.pro/62d153de01da78c4f027ea86e414afc23334c320',
-  143: 'https://billowing-bold-reel.monad-mainnet.quiknode.pro/62d153de01da78c4f027ea86e414afc23334c320',
+  1: 'https://polished-aged-patron.ethereum-mainnet.quiknode.pro/397756892cd5b114412f8819684fc80c7d1da8a1',
+  10: 'https://polished-aged-patron.optimism.quiknode.pro/397756892cd5b114412f8819684fc80c7d1da8a1',
+  56: 'https://polished-aged-patron.bsc.quiknode.pro/397756892cd5b114412f8819684fc80c7d1da8a1',
+  137: 'https://polished-aged-patron.matic.quiknode.pro/397756892cd5b114412f8819684fc80c7d1da8a1',
+  143: 'https://polished-aged-patron.monad-mainnet.quiknode.pro/397756892cd5b114412f8819684fc80c7d1da8a1',
+  324: 'https://polished-aged-patron.zksync-mainnet.quiknode.pro/397756892cd5b114412f8819684fc80c7d1da8a1',
+  999: 'https://polished-aged-patron.hype-mainnet.quiknode.pro/397756892cd5b114412f8819684fc80c7d1da8a1/evm',
+  4663: 'https://polished-aged-patron.robinhood-mainnet.quiknode.pro/397756892cd5b114412f8819684fc80c7d1da8a1',
+  8453: 'https://polished-aged-patron.base-mainnet.quiknode.pro/397756892cd5b114412f8819684fc80c7d1da8a1',
+  42161: 'https://polished-aged-patron.arbitrum-mainnet.quiknode.pro/397756892cd5b114412f8819684fc80c7d1da8a1',
+  43114:
+    'https://polished-aged-patron.avalanche-mainnet.quiknode.pro/397756892cd5b114412f8819684fc80c7d1da8a1/ext/bc/C/rpc/',
+  80094: 'https://polished-aged-patron.bera-mainnet.quiknode.pro/397756892cd5b114412f8819684fc80c7d1da8a1',
 };
 
 export const EVM_QUICKNODE_WSS: Record<number, string> = {
+  1: 'wss://polished-aged-patron.ethereum-mainnet.quiknode.pro/397756892cd5b114412f8819684fc80c7d1da8a1',
+  10: 'wss://polished-aged-patron.optimism.quiknode.pro/397756892cd5b114412f8819684fc80c7d1da8a1',
+  56: 'wss://polished-aged-patron.bsc.quiknode.pro/397756892cd5b114412f8819684fc80c7d1da8a1',
+  137: 'wss://polished-aged-patron.matic.quiknode.pro/397756892cd5b114412f8819684fc80c7d1da8a1',
+  143: 'wss://polished-aged-patron.monad-mainnet.quiknode.pro/397756892cd5b114412f8819684fc80c7d1da8a1',
+  324: 'wss://polished-aged-patron.zksync-mainnet.quiknode.pro/397756892cd5b114412f8819684fc80c7d1da8a1',
+  999: 'wss://polished-aged-patron.hype-mainnet.quiknode.pro/397756892cd5b114412f8819684fc80c7d1da8a1/nanoreth',
+  4663: 'wss://polished-aged-patron.robinhood-mainnet.quiknode.pro/397756892cd5b114412f8819684fc80c7d1da8a1',
+  8453: 'wss://polished-aged-patron.base-mainnet.quiknode.pro/397756892cd5b114412f8819684fc80c7d1da8a1',
+  42161: 'wss://polished-aged-patron.arbitrum-mainnet.quiknode.pro/397756892cd5b114412f8819684fc80c7d1da8a1',
+  43114:
+    'wss://polished-aged-patron.avalanche-mainnet.quiknode.pro/397756892cd5b114412f8819684fc80c7d1da8a1/ext/bc/C/ws/',
+  80094: 'wss://polished-aged-patron.bera-mainnet.quiknode.pro/397756892cd5b114412f8819684fc80c7d1da8a1',
+};
+
+// Backup QuickNode EVM endpoints (previous primary, used when the primary QuickNode fails)
+export const EVM_QUICKNODE_RPCS_BACKUP: Record<number, string> = {
+  1: 'https://billowing-bold-reel.ethereum-mainnet.quiknode.pro/62d153de01da78c4f027ea86e414afc23334c320',
+  10: 'https://billowing-bold-reel.optimism.quiknode.pro/62d153de01da78c4f027ea86e414afc23334c320',
+  56: 'https://billowing-bold-reel.bsc.quiknode.pro/62d153de01da78c4f027ea86e414afc23334c320',
+  137: 'https://billowing-bold-reel.matic.quiknode.pro/62d153de01da78c4f027ea86e414afc23334c320',
+  143: 'https://billowing-bold-reel.monad-mainnet.quiknode.pro/62d153de01da78c4f027ea86e414afc23334c320',
+  324: 'https://billowing-bold-reel.zksync-mainnet.quiknode.pro/62d153de01da78c4f027ea86e414afc23334c320',
+  4663: 'https://billowing-bold-reel.robinhood-mainnet.quiknode.pro/62d153de01da78c4f027ea86e414afc23334c320',
+  8453: 'https://billowing-bold-reel.base-mainnet.quiknode.pro/62d153de01da78c4f027ea86e414afc23334c320',
+  42161: 'https://billowing-bold-reel.arbitrum-mainnet.quiknode.pro/62d153de01da78c4f027ea86e414afc23334c320',
+  43114:
+    'https://billowing-bold-reel.avalanche-mainnet.quiknode.pro/62d153de01da78c4f027ea86e414afc23334c320/ext/bc/C/rpc/',
+  80094: 'https://billowing-bold-reel.bera-mainnet.quiknode.pro/62d153de01da78c4f027ea86e414afc23334c320',
+};
+
+export const EVM_QUICKNODE_WSS_BACKUP: Record<number, string> = {
   1: 'wss://billowing-bold-reel.ethereum-mainnet.quiknode.pro/62d153de01da78c4f027ea86e414afc23334c320',
   56: 'wss://billowing-bold-reel.bsc.quiknode.pro/62d153de01da78c4f027ea86e414afc23334c320',
   137: 'wss://billowing-bold-reel.matic.quiknode.pro/62d153de01da78c4f027ea86e414afc23334c320',
   8453: 'wss://billowing-bold-reel.base-mainnet.quiknode.pro/62d153de01da78c4f027ea86e414afc23334c320',
   143: 'wss://billowing-bold-reel.monad-mainnet.quiknode.pro/62d153de01da78c4f027ea86e414afc23334c320',
-};
-
-// Previous primary QuickNode EVM endpoints, kept as extra backups.
-export const EVM_QUICKNODE_RPCS_OLD: Record<number, string> = {
-  1: 'https://serene-greatest-putty.quiknode.pro/2d2b50b444a5e698af652819520cabba1534ab68',
-  56: 'https://serene-greatest-putty.bsc.quiknode.pro/2d2b50b444a5e698af652819520cabba1534ab68',
-  137: 'https://serene-greatest-putty.matic.quiknode.pro/2d2b50b444a5e698af652819520cabba1534ab68',
-  8453: 'https://serene-greatest-putty.base-mainnet.quiknode.pro/2d2b50b444a5e698af652819520cabba1534ab68',
-};
-
-// Backup QuickNode EVM endpoints (used when the primary QuickNode fails)
-export const EVM_QUICKNODE_RPCS_BACKUP: Record<number, string> = {
-  1: 'https://weathered-light-model.ethereum-mainnet.quiknode.pro/011b0a292145c53896e52bbbb68b39f697b0599b',
-  56: 'https://weathered-light-model.bsc.quiknode.pro/011b0a292145c53896e52bbbb68b39f697b0599b',
-  137: 'https://weathered-light-model.matic.quiknode.pro/011b0a292145c53896e52bbbb68b39f697b0599b',
-  8453: 'https://weathered-light-model.base-mainnet.quiknode.pro/011b0a292145c53896e52bbbb68b39f697b0599b',
-};
-
-export const EVM_QUICKNODE_WSS_BACKUP: Record<number, string> = {
-  1: 'wss://weathered-light-model.ethereum-mainnet.quiknode.pro/011b0a292145c53896e52bbbb68b39f697b0599b',
-  56: 'wss://weathered-light-model.bsc.quiknode.pro/011b0a292145c53896e52bbbb68b39f697b0599b',
-  137: 'wss://weathered-light-model.matic.quiknode.pro/011b0a292145c53896e52bbbb68b39f697b0599b',
-  8453: 'wss://weathered-light-model.base-mainnet.quiknode.pro/011b0a292145c53896e52bbbb68b39f697b0599b',
 };
 
 export const EVM_ALCHEMY_RPCS: Record<number, string> = {
@@ -182,7 +232,6 @@ export function getEvmRpcs(chainId: number): string[] {
     EVM_QUICKNODE_RPCS[chainId],
     EVM_ALCHEMY_RPCS[chainId],
     EVM_QUICKNODE_RPCS_BACKUP[chainId],
-    EVM_QUICKNODE_RPCS_OLD[chainId],
     EVM_ALCHEMY_RPCS_BACKUP[chainId],
     chainId === 143 ? 'https://rpc.monad.xyz' : undefined,
   ].filter(Boolean) as string[];

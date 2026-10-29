@@ -3,7 +3,7 @@ import { detectToken as detectDexToken } from './dexScreener';
 import { withSolanaConnection, COVALENT_CHAIN_NAMES, covalentFetch } from '@/config/rpcEndpoints';
 import { fetchEvmPriceFromAlchemy, fetchSolanaPriceFromAlchemy } from './alchemyPrices';
 const METADATA_PROGRAM_ID = new PublicKey('metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s');
-const MORALIS_API_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJub25jZSI6IjVkZTZhZTBhLWE1ZDUtNDJlNi04YTc2LTE5MzRhMzE3YWVjNyIsIm9yZ0lkIjoiNDc5MTQ3IiwidXNlcklkIjoiNDkyOTQ3IiwidHlwZUlkIjoiY2M1Y2Q3ZmEtYzY5OS00NDIxLTg2MDgtNjhhNWZlYmI3NzkzIiwidHlwZSI6IlBST0pFQ1QiLCJpYXQiOjE3NjIwOTI5NTksImV4cCI6NDkxNzg1Mjk1OX0.k7F9gymw59NoAhOYieWLKS-APSTwGHaZYnDId7EiHr4';
+export const MORALIS_API_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJub25jZSI6IjVkZTZhZTBhLWE1ZDUtNDJlNi04YTc2LTE5MzRhMzE3YWVjNyIsIm9yZ0lkIjoiNDc5MTQ3IiwidXNlcklkIjoiNDkyOTQ3IiwidHlwZUlkIjoiY2M1Y2Q3ZmEtYzY5OS00NDIxLTg2MDgtNjhhNWZlYmI3NzkzIiwidHlwZSI6IlBST0pFQ1QiLCJpYXQiOjE3NjIwOTI5NTksImV4cCI6NDkxNzg1Mjk1OX0.k7F9gymw59NoAhOYieWLKS-APSTwGHaZYnDId7EiHr4';
 
 /** Covalent price fallback for EVM tokens. Returns 0 on any failure. */
 async function fetchEvmPriceFromCovalent(address: string, chainId: number): Promise<number> {
